@@ -116,6 +116,17 @@ RECURSOS = [
     {"id": 1, "titulo": "Logo de economía", "autor": "", "drive_id": "1B4Vgzmfb0pJQUzLWessO9zv2_wfC1Vhu", "categoria": "General"},
 ]
 
+# =============================================================
+# DATOS: EXÁMENES
+# Misma lógica que LIBROS y RECURSOS: copia una entrada, cambia
+# los datos. "autor" puede usarse para el curso/ciclo/profesor.
+# Reemplaza estos ejemplos por tus exámenes reales.
+# =============================================================
+EXAMENES = [
+    {"id": 1, "titulo": "Examen parcial - Microeconomía", "autor": "Ciclo 2025-I", "drive_id": "", "categoria": "Microeconomía"},
+    {"id": 2, "titulo": "Examen final - Estadística", "autor": "Ciclo 2025-I", "drive_id": "", "categoria": "Estadística"},
+]
+
 
 # =============================================================
 # UTILIDADES DE RENDER (HTML)
@@ -433,12 +444,15 @@ def mostrar_carrusel(items: list, buscador_key: str):
 if "vista" not in st.session_state:
     st.session_state.vista = "Biblioteca"
 
+SECCIONES = ["Biblioteca", "Recursos Didácticos", "Exámenes"]
+
 with st.sidebar:
     st.title("📚 Menú")
     st.session_state.vista = st.radio(
         "Ir a:",
-        ["Biblioteca", "Recursos Didácticos"],
-        index=0 if st.session_state.vista == "Biblioteca" else 1,
+        SECCIONES,
+        index=SECCIONES.index(st.session_state.vista)
+        if st.session_state.vista in SECCIONES else 0,
         label_visibility="collapsed",
     )
 
@@ -448,6 +462,9 @@ with st.sidebar:
 if st.session_state.vista == "Biblioteca":
     st.title("📚 Biblioteca de Economía")
     mostrar_carrusel(LIBROS, "buscar_libros")
-else:
+elif st.session_state.vista == "Recursos Didácticos":
     st.title("🎓 Recursos Didácticos")
     mostrar_carrusel(RECURSOS, "buscar_recursos")
+else:
+    st.title("📝 Exámenes")
+    mostrar_carrusel(EXAMENES, "buscar_examenes")
